@@ -8,6 +8,7 @@ import javafx.scene.shape.Circle;
 import static game.Checkers.CELL_SIZE;
 
 public class Checker extends StackPane {
+
     public enum CheckerCondition {
         WHITE(1), BLACK(-1);
         final int moveType;
@@ -37,22 +38,12 @@ public class Checker extends StackPane {
         return checkerCondition;
     }
 
-    public void setCheckerCondition(CheckerCondition checkerCondition) {
-        this.checkerCondition = checkerCondition;
-    }
-
     public boolean validY(int y, int y0, int moveOrKill) {
         return (isQueen)? Math.abs(y - y0) == Math.abs(checkerCondition.moveType) * moveOrKill : y - y0 == checkerCondition.moveType * moveOrKill;
     }
 
-    public void queendraw(){
-        Circle checker1 = new Circle(CELL_SIZE * 0.15);
-            checker1.setTranslateX((CELL_SIZE - CELL_SIZE * 0.35 * 2) / 2);
-            checker1.setTranslateY((CELL_SIZE - CELL_SIZE * 0.35 * 2) / 2);
-            checker1.setFill( Color.RED);
-            getChildren().add(checker1);
-    }
-    public Checker(int x, int y, CheckerCondition checkerCondition,boolean isQueen) {
+    public Checker(int x, int y, CheckerCondition checkerCondition) {
+
         this.checkerCondition = checkerCondition;
         move(x, y);
         Circle checker = new Circle(CELL_SIZE * 0.35);
@@ -67,6 +58,15 @@ public class Checker extends StackPane {
         setOnMouseDragged((MouseEvent e) -> {
             relocate(e.getSceneX() - mX + x0, e.getSceneY() - mY + y0);
         });
+    }
+
+    public void queendraw() {
+
+        Circle checker1 = new Circle(CELL_SIZE * 0.15);
+        checker1.setTranslateX((CELL_SIZE - CELL_SIZE * 0.35 * 2) / 2);
+        checker1.setTranslateY((CELL_SIZE - CELL_SIZE * 0.35 * 2) / 2);
+        checker1.setFill(Color.RED);
+        getChildren().add(checker1);
     }
 
     public void beforeMove() {

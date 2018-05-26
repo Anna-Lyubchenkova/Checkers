@@ -5,12 +5,12 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
 public class Checkers extends Application {
-    public static final int CELL_SIZE = 80;
+
+    public static final int CELL_SIZE = 87;
     public static final int HEIGHT = 8;
     public static final int WIDTH = 8;
     private Group boardCell = new Group();
@@ -19,11 +19,10 @@ public class Checkers extends Application {
     private int isBlack = -1;
 
     private Parent createWindow() {
+
         Pane pane = new Pane();
-        pane.setPrefSize(CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT+100);
+        pane.setPrefSize(CELL_SIZE * WIDTH, CELL_SIZE * HEIGHT);
         pane.getChildren().addAll(boardCell, boardChecker);
-//        Text text= new Text();
-//        text.setText("MOVE: ");
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 Cell cell = new Cell(i, j, (i + j) % 2 == 0);
@@ -34,17 +33,17 @@ public class Checkers extends Application {
                 Checker checker = null;
 
                 if (j < 3 && (i + j) % 2 != 0) {
-                    checker = takeChecker(i, j, Checker.CheckerCondition.WHITE,false);
+                    checker = takeChecker(i, j, Checker.CheckerCondition.WHITE);
                 }
 
                 if (j > 4 && (i + j) % 2 != 0) {
-                    checker = takeChecker(i, j, Checker.CheckerCondition.BLACK,false);
+                    checker = takeChecker(i, j, Checker.CheckerCondition.BLACK);
                 }
 //                if(i==0 && j==1){
-//                    checker = takeChecker(i,j, Checker.CheckerCondition.BLACK,false);
+//                    checker = takeChecker(i,j, Checker.CheckerCondition.BLACK);
 //                }
 //                if (i==7 && j==0){
-//                    checker = takeChecker(i,j, Checker.CheckerCondition.WHITE,false);
+//                    checker = takeChecker(i,j, Checker.CheckerCondition.WHITE);
 //                }
                 if (checker != null) {
                     cell.setChecker(checker);
@@ -64,8 +63,9 @@ public class Checkers extends Application {
         primaryStage.show();
     }
 
-    private Checker takeChecker(int x, int y, Checker.CheckerCondition checkerCondition,boolean isQueen) {
-        Checker checker = new Checker(x, y, checkerCondition,isQueen);
+    private Checker takeChecker(int x, int y, Checker.CheckerCondition checkerCondition) {
+
+        Checker checker = new Checker(x, y, checkerCondition);
         checker.setOnMouseReleased(e -> {
             int x1 = boardCoordinates(checker.getLayoutX());
             int y1 = boardCoordinates(checker.getLayoutY());
@@ -73,7 +73,6 @@ public class Checkers extends Application {
             if (x1 < 0 || y1 < 0 || x1 >= WIDTH || y1 >= HEIGHT) {
                 condition = new MoveCondition(MoveCondition.MoveResult.NONE);
             } else condition = tryMove(x1, y1, checker);
-        //    System.out.println(condition.getMoveResult());
             int x0 = boardCoordinates(checker.getX0());
             int y0 = boardCoordinates(checker.getY0());
             switch (condition.getMoveResult()) {
@@ -97,6 +96,7 @@ public class Checkers extends Application {
                     if((checker.getCheckerCondition().moveType==1&&y1==7 ||
                             checker.getCheckerCondition().moveType==-1&&y1==0)&& !checker.isQueen()){
                         checker.setQueen(true);
+                        checker.queendraw();
                     }
                     cells[x1][y1].setChecker(checker);
                     Checker newChecker = condition.getChecker();
@@ -109,6 +109,7 @@ public class Checkers extends Application {
     }
 
     private MoveCondition tryMove(int x, int y, Checker checker) {
+
         if (cells[x][y].existChecker() || ((x + y) % 2 == 0)) return new MoveCondition(MoveCondition.MoveResult.NONE);
         int x0 = boardCoordinates(checker.getX0());
         int y0 = boardCoordinates(checker.getY0());
