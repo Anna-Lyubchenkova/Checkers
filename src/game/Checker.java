@@ -4,6 +4,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.Pair;
 
 import static game.Checkers.CELL_SIZE;
 
@@ -39,7 +40,34 @@ public class Checker extends StackPane {
     }
 
     public boolean validY(int y, int y0, int moveOrKill) {
-        return (isQueen)? Math.abs(y - y0) == Math.abs(checkerCondition.moveType) * moveOrKill : y - y0 == checkerCondition.moveType * moveOrKill;
+        //return (isQueen )? Math.abs(y - y0) == Math.abs(checkerCondition.moveType) * moveOrKill : y - y0 == checkerCondition.moveType * moveOrKill;
+        if (!isQueen) {
+            return (moveOrKill == 2)
+                    ? Math.abs(y - y0) == Math.abs(checkerCondition.moveType) * moveOrKill
+                    : y - y0 == checkerCondition.moveType * moveOrKill;
+        } else {
+            int y_diff = Math.abs(y - y0);
+
+            return false;
+        }
+    }
+
+    public boolean validX(int x, int x0, int moveOrKill) {
+        if (!isQueen) {
+            return Math.abs(x - x0) == moveOrKill;
+        } else {
+            return false;
+        }
+    }
+
+    public Pair<Integer, Integer> validXY(int x, int x0, int y, int y0, int moveOrKill) {
+        if (moveOrKill == 1) {
+            boolean isValid = (Math.abs(x - x0) == moveOrKill) && (y - y0 == checkerCondition.moveType);
+            return (isValid) ? new Pair<>(Integer.valueOf(-1), Integer.valueOf(-1)) : null;
+        } else {
+            boolean isValid = (Math.abs(x - x0) == moveOrKill) && (Math.abs(y - y0) == moveOrKill);
+            return (isValid) ? new Pair<>(Integer.valueOf(x0 + (x - x0) / 2), Integer.valueOf(y0 + (y - y0) / 2)) : null;
+        }
     }
 
     public Checker(int x, int y, CheckerCondition checkerCondition) {
